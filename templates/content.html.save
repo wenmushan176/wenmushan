@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧利蒂丝庄园 - 第五人格</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'Gothic';
+            src: url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+        }
+
+        @font-face {
+            font-family: 'dwrg';
+            src: url(汉仪第五人格体.ttf) format('truetype');
+        }
+
+        body {
+            background-color: #000;
+            color: #e0d6c2;
+            overflow-x: hidden;
+            height: 100vh;
+            position: relative;
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* 首页样式 */
+        #home-page {
+            width: 100%;
+            height: 100vh;
+            background-image: url('oletus.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #home-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .intro-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #5a3e2b;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(90, 62, 43, 0.7);
+            margin-bottom: 50px;
+            animation: fadeIn 2s ease-in-out;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .intro-container::before, .intro-container::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #c9a568;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .intro-container::before {
+            top: -10px;
+            left: -10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .intro-container::after {
+            bottom: -10px;
+            right: -10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .intro-text {
+            margin-bottom: 20px;
+            text-align: left;
+            text-shadow: 0 0 3px #000;
+            letter-spacing: 0.5px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .dialog-box {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #5a3e2b;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+            animation: pulse 2s infinite;
+            opacity: 0; /* 初始隐藏 */
+            transition: opacity 1s ease;
+        }
+
+        .dialog-box.show {
+            opacity: 1; /* 显示 */
+        }
+
+        .dialog-box:hover {
+            background: rgba(20, 20, 20, 0.9);
+            box-shadow: 0 0 15px rgba(201, 165, 104, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px rgba(201, 165, 104, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(201, 165, 104, 0.7); }
+            100% { box-shadow: 0 0 5px rgba(201, 165, 104, 0.3); }
+        }
+
+        .dialog-text {
+            font-family: 'dwrg', sans-serif;
+            font-size: 1.3rem;
+            color: #c9a568;
+            text-align: center;
+            text-shadow: 0 0 3px #000;
+            
+        }
+
+        /* 音乐开关图标 */
+        .music-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: url('music-icon.png') no-repeat center center; /* 自定义图标 */
+            background-size: contain;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .music-toggle.playing {
+            animation: rotate 2s infinite linear;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 角色页面样式 */
+        #characters-page {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            background: url(newpage.png) no-repeat center center fixed;
+            background-size: cover;
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        #characters-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .characters-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-family: 'dwrg', sans-serif;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #c9a568;
+            text-shadow: 0 0 5px #000;
+            letter-spacing: 2px;
+        }
+
+        .role-filter {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(90, 62, 43, 0.5);
+            color: #e0d6c2;
+            border: 1px solid #5a3e2b;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(201, 165, 104, 0.3);
+            color: #c9a568;
+            border-color: #c9a568;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .character-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #5a3e2b;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            height: 350px;
+        }
+
+        .character-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            border-color: #c9a568;
+        }
+
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.9));
+            z-index: 1;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            z-index: 2;
+        }
+
+        .character-name {
+            font-family: 'dwrg', sans-serif;
+            font-size: 1.5rem;
+            color: #c9a568;
+            margin-bottom: 10px;
+            text-shadow: 0 0 3px #000;
+        }
+
+        .character-role {
+            display: inline-block;
+            padding: 3px 8px;
+            background: rgba(90, 62, 43, 0.7);
+            border-radius: 3px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .survivor {
+            background: rgba(0, 100, 0, 0.7);
+        }
+
+        .hunter {
+            background: rgba(139, 0, 0, 0.7);
+        }
+
+        .character-desc {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 70px;
+            padding: 10px 15px;
+            background: rgba(90, 62, 43, 0.7);
+            color: #e0d6c2;
+            border: 1px solid #5a3e2b;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: rgba(201, 165, 104, 0.3);
+            color: #c9a568;
+            border-color: #c9a568;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .intro-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .intro-text {
+                font-size: 1rem;
+            }
+
+            .dialog-text {
+                font-size: 1.1rem;
+            }
+
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .character-card {
+                height: 300px;
+            }
+            
+            .back-btn {
+                left: 60px;
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .role-filter {
+                flex-wrap: wrap;
+            }
+            
+            .music-toggle {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .back-btn {
+                left: 50px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 首页 -->
+    <div id="home-page">
+        <div class="intro-container">
+            <p class="intro-text" id="intro-text-1"></p>
+            <p class="intro-text" id="intro-text-2"></p>
+        </div>
+        <div class="dialog-box" id="enter-dialog">
+            <p class="dialog-text">"你……真的决定要进去吗？"</p>
+        </div>
+    </div>
+
+    <!-- 音乐开关图标 -->
+    <div class="music-toggle playing" id="music-toggle"></div>
+
+    <!-- 背景音乐 -->
+    <audio id="background-music" loop>
+        <source src="第五人格_爱给网_aigei_com.MP3" type="audio/mpeg">
+        您的浏览器不支持音频播放。
+    </audio>
+
+    <!-- 角色页面 -->
+    <div id="characters-page">
+        <button class="back-btn" id="back-btn">← 返回</button>
+        <div class="characters-container">
+            <h2 class="page-title">欧利蒂丝庄园角色档案</h2>
+            <div class="role-filter">
+                <button class="filter-btn active" data-role="all">全部</button>
+                <button class="filter-btn" data-role="survivor">求生者</button>
+                <button class="filter-btn" data-role="hunter">监管者</button>
+            </div>
+            <div class="cards-container" id="cards-container">
+                <!-- 角色卡片将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 角色数据
+        const characters = [
+            {
+                id: 1,
+                name: "园丁 - 艾玛·伍兹",
+                role: "survivor",
+                image: "园丁.png",
+                description: "擅长园艺的年轻女孩，随身携带园艺剪刀。已经找到了那个特别的“唯一”，现在艾玛终于能够安心地使用自己完美的园艺技巧和才艺了。也许亲爱的稻草人先生还需要一些修饰，换掉那些腐坏的深棕色茅草，再加上一顶新的帽子。当然，她从来不是只看外表的女孩。"
+            },
+            {
+                id: 2,
+                name: "医生 - 艾米丽·黛儿",
+                role: "survivor",
+                image: "医生.png",
+                description: "拥有精湛医术的女医生，随身携带医疗针。已经对不停地搬迁感到疲倦，艾米丽希望能借此找到一个可以被称为“家”的地方，并且最终得到她从未拥有的安全感和稳定生活。在此之前，她得解决过去遗留的一些“问题”。"
+            },
+            {
+                id: 3,
+                name: "律师 - 弗雷迪·莱利",
+                role: "survivor",
+                image: "莱利.png",
+                description: "精明能干的律师，随身携带地图。受困于过去的失败官司，他现在干着一份卑微的工作，拿着微薄到可笑的薪水。与此同时，弗雷迪希望可能找到一条摆脱过去的出路，并目最终过上那种他从未拥有的生活，比如拿到一笔不菲的奖金，得到成为律所合伙人的契机。当然，首先他得找到那个毁掉他美满生活的罪魁祸首。。"
+            },
+            {
+                id: 4,
+                name: "佣兵 - 奈布·萨贝达",
+                role: "survivor",
+                image: "佣兵.png",
+                description: "来自东方的雇佣兵，身手敏捷。曾经是一名效力于东印度公司的廓尔喀雇佣兵，就像绝大部分的廓尔喀人一样，他个子不高，体格也并不算壮硕。但所有人都知道一个廓尔喀战士就意味着纪律严明和英勇善战。。"
+            },
+            {
+                id: 5,
+                name: "鹿头 - 班恩",
+                role: "hunter",
+                image: "鹿头.png",
+                description: "戴着鹿头面具的监管者，使用钩链攻击求生者。班恩是个热心肠的猎场看守，总是心软地放那些偷猎者离开。但他的宽容没有得到回报，偷猎者们去而复返，袭击了他，可怜的班恩被摁在捕兽夹上，耳边不断回响着鹿群的哀鸣。偷猎者带着战利品离开后，猎犬把班恩拖回了庄园，从此班恩对任何进入自己“领地”的人都不再留情。"
+            },
+            {
+                id: 6,
+                name: "摄影师 - 约瑟夫",
+                role: "hunter",
+                image: "约瑟夫.png",
+                description: "约瑟夫·德拉索恩斯曾是当地受人尊敬的乡绅，富有、举止优雅并拥有迷人的异国口音。人们乐意为这位老绅士的个人爱好充当模特，但随着约瑟夫的摄影作品增加，村庄中的人却越来越少。看起来这位摄影师通过快门收集了一些容貌之外的东西。"
+            },
+            {
+                id: 7,
+                name: "红蝶 - 美智子",
+                role: "hunter",
+                image: "红蝶.png",
+                description: "来自东方的舞者监管者，能够快速移动。艺伎美智子在宴会上与异国军官迈尔斯相遇，继而相恋。他们在当地举行了婚礼并一同返回了迈尔斯的故乡。可这段婚姻遭到迈尔斯父亲的强烈反对，他整日对美智子冷嘲热讽，期望能将她赶出家门。不久，迈尔斯因公外出，美智子从家中神秘消失，迈尔斯的父亲声称她与佣人私奔，并很快要求自己的儿子迎娶新的妻子。迈尔斯开始日复一日地出门寻找美智子，但没人知道她去了哪里。"
+            },
+            {
+                id: 8,
+                name: "小丑 - 裘克",
+                role: "hunter",
+                image: "小丑.png",
+                description: "疯狂的小丑监管者，使用火箭冲刺攻击。裘克曾经是马戏团中的顶梁柱，天生的哭丧脸使他成为最棒的哭泣小丑。而这种优势在英俊的微笑小丑瑟吉和美艳的杂技女明星娜塔莉加入马戏团后，发生了变化。他意识到自己应当转换一下“职业跑道”。显然，在获得一张永恒的笑面后，裘克能在新的喜剧表演中尽情发挥了。"
+            }
+        ];
+
+        // DOM元素
+        const homePage = document.getElementById('home-page');
+        const charactersPage = document.getElementById('characters-page');
+        const enterDialog = document.getElementById('enter-dialog');
+        const backBtn = document.getElementById('back-btn');
+        const cardsContainer = document.getElementById('cards-container');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const introText1 = document.getElementById('intro-text-1');
+        const introText2 = document.getElementById('intro-text-2');
+        const musicToggle = document.getElementById('music-toggle');
+        const backgroundMusic = document.getElementById('background-music');
+
+        // 进入角色页面
+        enterDialog.addEventListener('click', () => {
+            homePage.style.display = 'none';
+            charactersPage.style.display = 'block';
+            renderCharacters('all');
+        });
+
+        // 返回首页
+        backBtn.addEventListener('click', () => {
+            charactersPage.style.display = 'none';
+            homePage.style.display = 'flex';
+        });
+
+        // 角色筛选
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderCharacters(btn.dataset.role);
+            });
+        });
+
+        // 渲染角色卡片
+        function renderCharacters(role) {
+            cardsContainer.innerHTML = '';
+
+            const filteredCharacters = role === 'all'
+                ? characters
+                : characters.filter(char => char.role === role);
+
+            filteredCharacters.forEach(character => {
+                const card = document.createElement('div');
+                card.className = 'character-card';
+
+                card.innerHTML = `
+                    <img src="${character.image}" alt="${character.name}" class="card-image">
+                    <div class="card-content">
+                        <h3 class="character-name">${character.name}</h3>
+                        <span class="character-role ${character.role}">
+                            ${character.role === 'survivor' ? '求生者' : '监管者'}
+                        </span>
+                        <p class="character-desc">${character.description}</p>
+                    </div>
+                `;
+
+                cardsContainer.appendChild(card);
+            });
+        }
+
+        // 打字机效果
+        function typeWriter(element, text, speed) {
+            let i = 0;
+            element.innerHTML = '';
+
+            function typing() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed);
+                } else {
+                    // 文字输出完毕后检查是否需要显示按钮
+                    checkAllTextTyped();
+                }
+            }
+
+            typing();
+        }
+
+        // 检查所有文字是否已输出完毕
+        function checkAllTextTyped() {
+            const text1Complete = introText1.textContent.length === text1.length;
+            const text2Complete = introText2.textContent.length === text2.length;
+
+            if (text1Complete && text2Complete) {
+                // 显示对话框按钮
+                setTimeout(() => {
+                    enterDialog.classList.add('show');
+                }, 500); // 延迟500ms显示
+            }
+        }
+
+        // 音乐控制逻辑
+        function toggleMusic() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().then(() => {
+                    musicToggle.classList.add('playing');
+                }).catch(error => {
+                    console.log('播放失败:', error);
+                });
+            } else {
+                backgroundMusic.pause();
+                musicToggle.classList.remove('playing');
+            }
+        }
+
+        // 初始化音乐播放
+        function initMusic() {
+            backgroundMusic.play().then(() => {
+                musicToggle.classList.add('playing');
+            }).catch(error => {
+                console.log('自动播放被阻止:', error);
+                // 如果自动播放失败，移除旋转动画
+                musicToggle.classList.remove('playing');
+            });
+        }
+
+        // 音乐图标点击事件
+        musicToggle.addEventListener('click', toggleMusic);
+
+        // 设置介绍文本
+        const text1 = "在19世纪，欧洲某偏远山区有一个古老的庄园——欧利蒂丝庄园。这里流传着古怪的传言：从未露面的庄园主人多次举办神秘的\"寻宝游戏\"，然而，凡是参加游戏的人，均离奇失踪在庄园之中。这座庄园原本属于一个富有的家族，但随着一系列诡异事件的发生，庄园逐渐被世人遗忘。";
+        const text2 = "10年前的一场大火吞噬了它，唯一的幸存者——侦探奥尔菲斯失去了记忆。如今，庄园的大门再次敞开，新的\"游戏\"即将开始……";
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化音乐
+            initMusic();
+
+            // 开始打字机效果
+            setTimeout(() => typeWriter(introText1, text1, 80), 550);
+            setTimeout(() => typeWriter(introText2, text2, 80), 550 + text1.length * 80 + 1000);
+        });
+    </script>
+</body>
+</html>
