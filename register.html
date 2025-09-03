@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>第五人格 - 欧利蒂丝庄园注册</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Crimson+Text&display=swap');
+        
+        :root {
+            --blood-red: #8b0000;
+            --gothic-gold: #c5a46d;
+            --aged-parchment: #e8e0cb;
+            --deep-abyss: #0a0a0f;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+    
+        body {
+            background: var(--deep-abyss) url(identity.png) no-repeat center/100% 100% fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Crimson Text', serif;
+            position: relative;
+            overflow: hidden;
+        }
+    
+        input, textarea, [contenteditable] {
+            user-select: auto;
+            -webkit-user-select: auto;
+        }
+    
+        *:focus {
+            outline: none;
+        }
+    
+        /* 维多利亚纹章容器 */
+        .heraldry-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+            width: 420px;
+            position: relative;
+            z-index: 2;
+            border: 2px solid rgba(197, 164, 109, 0.6);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+    
+        .heraldry-container:hover {
+            border-color: rgba(197, 164, 109, 1);
+            box-shadow: 0 0 15px rgba(197, 164, 109, 0.6);
+        }
+    
+        /* 输入框样式 */
+        .input-field {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(197, 164, 109, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            color: #333;
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 40px;
+        }
+    
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(197, 164, 109, 1);
+            box-shadow: 0 0 15px rgba(197, 164, 109, 0.6);
+            background: rgba(255, 255, 255, 0.8);
+            animation: glow 1s infinite alternate;
+        }
+    
+        /* 输入图标 */
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-110%);
+            color: #333;
+            font-size: 1.2rem;
+        }
+    
+        /* 注册按钮 */
+        .register-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(197, 164, 109, 0.8);
+            border: none;
+            border-radius: 4px;
+            color: #333;
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .register-btn:hover {
+            background: rgba(197, 164, 109, 1);
+        }
+    
+        .register-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 48%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 52%
+            );
+            animation: buttonGlow 3s infinite;
+        }
+    
+        /* 已有账号提示 */
+        .login-call {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--gothic-gold);
+            font-size: 0.8rem;
+        }
+    
+        .login-link {
+            margin-top: 0.5rem;
+            color: var(--blood-red);
+            text-decoration: none;
+            margin-left: 0.7rem;
+            text-align: center;
+            font-size: 0.82rem;
+            transition: color 0.3s;
+        }
+    
+        /* 确保"Oletus Manor"的字体颜色不透明 */
+        .logo-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2.5rem;
+            color: var(--gothic-gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.7rem;
+            text-align: center;
+        }
+
+        .logo-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .divider {
+            width: 100%;
+            height: 8px;
+        }
+
+        .error-message {
+            color: var(--blood-red);
+            font-size: 0.8rem;
+            position: absolute;
+            bottom: -0.5rem;
+            width: 100%;
+            text-align:left;
+            visibility: hidden;
+            transition: visibility 0.3s;
+        }
+
+        .error-message.visible {
+            visibility: visible;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(197, 164, 109, 0.6);
+            }
+            to {
+                box-shadow: 0 0 15px rgba(197, 164, 109, 0.8);
+            }
+        }
+
+        @keyframes buttonGlow {
+            0% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        form {
+            position: relative;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="heraldry-container">
+        <div class="logo-section">
+            <div class="logo-title">Oletus Manor</div>
+        </div>
+        <form id="registrationForm">
+            <div class="form-group">
+                <input type="text" id="username" class="input-field" placeholder="侦探编号" required>
+                <div id="username-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" class="input-field" placeholder="设置庄园密匙" required>
+                <div id="password-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <input type="password" id="confirm-password" class="input-field" placeholder="确认庄园密匙" required>
+                <div id="confirm-password-error" class="error-message"></div>
+            </div>
+            <button type="submit" class="register-btn">
+                <span>注册庄园</span>
+            </button>
+        </form>
+        <p class="login-link">
+            已有庄园账号？
+            <a href="/login" class="login-link">立即登录！</a>
+        </p>
+    </div>
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            let hasError = false;
+            // 基本校验
+            if (username.length < 4) {
+                alert('侦探账号至少需要4个字符');
+                hasError = true;
+            }
+            if (password.length < 6) {
+                alert('庄园密匙至少需要6个字符');
+                hasError = true;
+            } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+/.test(password)) {
+                alert('庄园密匙必须包含大小写字母和数字');
+                hasError = true;
+            }
+            if (password !== confirmPassword) {
+                alert('两次输入的庄园密匙不一致');
+                hasError = true;
+            }
+            if (!hasError) {
+                fetch('/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: username, password: password})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        window.location.href = '/login';
+                    } else {
+                        alert(data.error);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
